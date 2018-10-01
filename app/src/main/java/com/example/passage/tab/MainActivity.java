@@ -1,5 +1,6 @@
 package com.example.passage.tab;
 
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -21,16 +22,12 @@ public class MainActivity extends AppCompatActivity {
     {
         tabLayout=(TabLayout) findViewById(R.id.tab);
         viewPager=(ViewPager)findViewById(R.id.viewpager);
-        final Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar);
-        toolbar.setTitle("文章");
-        setSupportActionBar(toolbar);
         viewPager.setAdapter(new PageAdapter(getSupportFragmentManager(),3));
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                toolbar.setTitle(FragmentGenerator.mTabTitles[tab.getPosition()]);
             }
 
             @Override

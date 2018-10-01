@@ -8,11 +8,12 @@ import java.util.HashMap;
 
 public class PageAdapter extends FragmentPagerAdapter {
     private int num;
-    private HashMap<Integer,Fragment> mfragments=new HashMap<>();
+    private HashMap<Integer, Fragment> mfragments = new HashMap<>();
     private Fragment[] fragments;
-    public PageAdapter(FragmentManager fm,int num) {
+
+    public PageAdapter(FragmentManager fm, int num) {
         super(fm);
-        this.num=num;
+        this.num = num;
     }
 
     @Override
@@ -29,19 +30,20 @@ public class PageAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         return createFragment(position);
     }
+
     private Fragment createFragment(int pos) {
         Fragment fragment = mfragments.get(pos);
-        fragments= FragmentGenerator.getFragments();
+        fragments = FragmentGenerator.getFragments();
         if (fragment == null) {
             switch (pos) {
                 case 0:
-                    fragment =fragments[0];
+                    fragment = fragments[0];
                     break;
                 case 1:
                     fragment = fragments[1];
                     break;
                 case 2:
-                    fragment =fragments[2];
+                    fragment = fragments[2];
                     break;
                 case 3:
                     fragment = fragments[3];
