@@ -58,7 +58,7 @@ public class VoiceFragment extends Fragment implements VoiceContract.VoiceView {
         voiceAdapter = new VoiceAdapter(context, mCards, recyclerView);
         recyclerView.setAdapter(voiceAdapter);
         voiceAdapter.notifyDataSetChanged();
-        PresenterOfVoice presenter = new PresenterOfVoice(context, this);
+        PresenterOfVoice presenter = new PresenterOfVoice( this);
         voicePresenter.startLoad(url);
         return view;
     }

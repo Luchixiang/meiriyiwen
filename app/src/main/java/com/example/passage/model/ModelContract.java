@@ -8,10 +8,17 @@ import java.util.List;
 
 public interface ModelContract {
     interface CallBack{
-        void successOfArticle(String s1,String s2,String s3);
         void fail();
+    }
+    interface ArticleCallBack extends CallBack{
+        void successOfArticle(String s1,String s2,String s3);
+    }
+    interface VoiceCallBack extends CallBack{
         void successOfVoice(List<CardComponent> list, List<Bitmap> bitmaps);
     }
-    void getArticle(String url,CallBack callBack);
-    void getVoice(String url,CallBack callBack);
+    interface VoicePlayCallBack extends CallBack{
+        void suceessOfVoicePlay(String s);
+    }
+    void getArticle(String url,ArticleCallBack callBack);
+    void getVoice(String url,VoiceCallBack callBack);
 }

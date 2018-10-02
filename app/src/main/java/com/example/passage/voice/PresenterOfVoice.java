@@ -11,15 +11,13 @@ import java.util.List;
 
 public class PresenterOfVoice implements VoiceContract.VoicePresenter {
     private VoiceContract.VoiceView voiceView;
-    private Context context;
-    private ModelContract.CallBack voiceCallback;
+    private ModelContract.VoiceCallBack voiceCallback;
     private Model model;
     private List<CardComponent>mCards=new ArrayList<>();
     private List<Bitmap>bitmaps=new ArrayList<>();
-    public PresenterOfVoice(Context context, VoiceContract.VoiceView voiceView)
+    public PresenterOfVoice( VoiceContract.VoiceView voiceView)
     {
         this.voiceView=voiceView;
-        this.context=context;
         voiceView.setPresenter(this);
         creatModel();
     }
@@ -29,10 +27,7 @@ public class PresenterOfVoice implements VoiceContract.VoicePresenter {
     }
     public void creatModel()
     {
-        voiceCallback=new ModelContract.CallBack() {
-            @Override
-            public void successOfArticle(String s1, String s2, String s3) {
-            }
+        voiceCallback=new ModelContract.VoiceCallBack() {
 
             @Override
             public void successOfVoice(List<CardComponent> list, List<Bitmap> imgs) {
@@ -47,7 +42,7 @@ public class PresenterOfVoice implements VoiceContract.VoicePresenter {
             public void fail() {
             }
         };
-        model=new Model(context);
+        model=new Model();
     }
 
 }
