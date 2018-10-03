@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface VoiceContract {
     interface VoiceView extends BaseView<VoicePresenter> {
-        void listChanged(List<CardComponent> list, List<Bitmap>bitmaps);
+        void listChanged(List<CardComponent> list, List<Bitmap> bitmaps);
     }
 
     interface VoicePresenter extends BasePresenter {

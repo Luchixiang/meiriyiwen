@@ -6,6 +6,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -14,6 +15,7 @@ public class AudioPlayerUtils {
     public static int palyStatus = -1;
     private volatile static AudioPlayerUtils audioPlayerUtils = null;
     File tempFile = null;
+    private static final String TAG = "luchixiang";
 
     private AudioPlayerUtils() {
     }
@@ -23,10 +25,10 @@ public class AudioPlayerUtils {
             synchronized (AudioPlayerUtils.class) {
                 if (audioPlayerUtils == null) {
                     audioPlayerUtils = new AudioPlayerUtils();
-                    audioPlayerUtils.initView();
                 }
             }
         }
+        audioPlayerUtils.initView();
         return audioPlayerUtils;
     }
 
@@ -55,21 +57,25 @@ public class AudioPlayerUtils {
         }
         palyStatus = 1;
         try {
+            /*File file=new File(tempFile.getPath());
+            FileInputStream fis=new FileInputStream(file);
+            mediaPlayer.reset();*/
             mediaPlayer.setDataSource(tempFile.getPath());
-            Log.d("luchixiang", "playBase64: "+1);
-            mediaPlayer.prepareAsync();
+            Log.d(TAG, "playBase64: " + tempFile.getPath());
             mediaPlayer.setLooping(false);
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
+                    Log.d(TAG, "onPrepared: ");
                     mediaPlayer.start();
-
                 }
             });
+            mediaPlayer.prepareAsync();
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     mediaPlayer.reset();
+                    Log.d(TAG, "onCompletion: ");
                     palyStatus = 0;
                     if (tempFile != null && tempFile.exists()) {
                         tempFile.delete();

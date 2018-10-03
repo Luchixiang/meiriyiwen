@@ -13,21 +13,22 @@ public class PresenterOfVoice implements VoiceContract.VoicePresenter {
     private VoiceContract.VoiceView voiceView;
     private ModelContract.VoiceCallBack voiceCallback;
     private Model model;
-    private List<CardComponent>mCards=new ArrayList<>();
-    private List<Bitmap>bitmaps=new ArrayList<>();
-    public PresenterOfVoice( VoiceContract.VoiceView voiceView)
-    {
-        this.voiceView=voiceView;
+    private List<CardComponent> mCards = new ArrayList<>();
+    private List<Bitmap> bitmaps = new ArrayList<>();
+
+    public PresenterOfVoice(VoiceContract.VoiceView voiceView) {
+        this.voiceView = voiceView;
         voiceView.setPresenter(this);
         creatModel();
     }
+
     @Override
     public void startLoad(String string) {
-        model.getVoice(string,voiceCallback);
+        model.getVoice(string, voiceCallback);
     }
-    public void creatModel()
-    {
-        voiceCallback=new ModelContract.VoiceCallBack() {
+
+    public void creatModel() {
+        voiceCallback = new ModelContract.VoiceCallBack() {
 
             @Override
             public void successOfVoice(List<CardComponent> list, List<Bitmap> imgs) {
@@ -35,14 +36,14 @@ public class PresenterOfVoice implements VoiceContract.VoicePresenter {
                 mCards.addAll(list);
                 bitmaps.clear();
                 bitmaps.addAll(imgs);
-                voiceView.listChanged(list,imgs);
+                voiceView.listChanged(list, imgs);
             }
 
             @Override
             public void fail() {
             }
         };
-        model=new Model();
+        model = new Model();
     }
 
 }

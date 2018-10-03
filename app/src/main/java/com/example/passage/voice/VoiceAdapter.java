@@ -23,7 +23,7 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
     private Context context;
     private List<CardComponent> mCards = new ArrayList<>();
     private RecyclerView recyclerView;
-    private List<Bitmap>bitmaps=new ArrayList<>();
+    private List<Bitmap> bitmaps = new ArrayList<>();
 
     //public View.OnClickListener mLisenstener=new mListener();
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -57,29 +57,30 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int positon=recyclerView.getChildAdapterPosition(v);
-                CardComponent card=mCards.get(positon);
-                String link=card.getLinkUrl();
-                String imgUrl=card.getImgUrl();
-                String name=card.getVoiceTitle();
-                String author=card.getVoiceAuthor();
-                String player=card.getVoicePlayer();
-                Intent intent=new Intent(context,VoiceActivity.class);
-                intent.putExtra("URL",link);
-                intent.putExtra("URLIMG",imgUrl);
-                intent.putExtra("NAME",name);
-                intent.putExtra("AUTHOR",author);
-                intent.putExtra("PLAYER",player);
+                int positon = recyclerView.getChildAdapterPosition(v);
+                CardComponent card = mCards.get(positon);
+                String link = card.getLinkUrl();
+                String imgUrl = card.getImgUrl();
+                String name = card.getVoiceTitle();
+                String author = card.getVoiceAuthor();
+                String player = card.getVoicePlayer();
+                Intent intent = new Intent(context, VoiceActivity.class);
+                intent.putExtra("URL", link);
+                intent.putExtra("URLIMG", imgUrl);
+                intent.putExtra("NAME", name);
+                intent.putExtra("AUTHOR", author);
+                intent.putExtra("PLAYER", player);
                 context.startActivity(intent);
             }
         });
         return viewHolder;
     }
-    public void ListChanged(List<CardComponent> list, List<Bitmap>bitmaps)
-    {
-        this.mCards=list;
-        this.bitmaps=bitmaps;
+
+    public void ListChanged(List<CardComponent> list, List<Bitmap> bitmaps) {
+        this.mCards = list;
+        this.bitmaps = bitmaps;
     }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (!mCards.isEmpty()) {

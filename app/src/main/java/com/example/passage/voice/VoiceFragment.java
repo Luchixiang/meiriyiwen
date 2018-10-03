@@ -42,8 +42,8 @@ public class VoiceFragment extends Fragment implements VoiceContract.VoiceView {
 
     @Override
     public void listChanged(List<CardComponent> list, List<Bitmap> bitmaps) {
-        voiceAdapter.ListChanged(list,bitmaps);
-        Log.d("luchixiang", "listChanged: "+bitmaps.size());
+        voiceAdapter.ListChanged(list, bitmaps);
+        Log.d("luchixiang", "listChanged: " + bitmaps.size());
         voiceAdapter.notifyDataSetChanged();
     }
 
@@ -58,7 +58,7 @@ public class VoiceFragment extends Fragment implements VoiceContract.VoiceView {
         voiceAdapter = new VoiceAdapter(context, mCards, recyclerView);
         recyclerView.setAdapter(voiceAdapter);
         voiceAdapter.notifyDataSetChanged();
-        PresenterOfVoice presenter = new PresenterOfVoice( this);
+        PresenterOfVoice presenter = new PresenterOfVoice(this);
         voicePresenter.startLoad(url);
         return view;
     }

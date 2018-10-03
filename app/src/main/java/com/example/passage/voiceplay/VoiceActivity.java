@@ -2,6 +2,7 @@ package com.example.passage.voiceplay;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,10 +18,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.passage.R;
 import com.example.passage.utils.AudioPlayerUtils;
+import com.example.passage.utils.Player;
 
 import java.io.IOException;
 
-public class VoiceActivity extends AppCompatActivity implements VoicePlayContract.VoicePlayView{
+public class VoiceActivity extends AppCompatActivity implements VoicePlayContract.VoicePlayView {
     private String url;
     private String urlImg;
     private String voiceTitle;
@@ -33,6 +35,7 @@ public class VoiceActivity extends AppCompatActivity implements VoicePlayContrac
     private SeekBar seekBar;
     private FloatingActionButton pauseButton;
     private VoicePlayContract.VoicePlayPresenter voicePlayPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,59 +44,46 @@ public class VoiceActivity extends AppCompatActivity implements VoicePlayContrac
         initView();
         voicePlayPresenter.startLoad(url);
     }
-    public void getview()
-    {
-        Intent intent=getIntent();
-        url=intent.getStringExtra("URL");
-        voiceTitle=intent.getStringExtra("NAME");
-        voiceAuthor=intent.getStringExtra("AUTHOR");
-        voicePlayer=intent.getStringExtra("PLAYER");
-        urlImg=intent.getStringExtra("URLIMG");
+
+    public void getview() {
+        Intent intent = getIntent();
+        url = intent.getStringExtra("URL");
+        voiceTitle = intent.getStringExtra("NAME");
+        voiceAuthor = intent.getStringExtra("AUTHOR");
+        voicePlayer = intent.getStringExtra("PLAYER");
+        urlImg = intent.getStringExtra("URLIMG");
     }
 
     @Override
     public void base64(String string) {
-        //AudioPlayerUtils.getInstance().playBase64(this,string);
-        Log.d("luchixiang", "base64: "+new String(Base64.decode(string,Base64.DEFAULT)));
-        final MediaPlayer mediaPlayer=new MediaPlayer();
-        try {
-            mediaPlayer.setDataSource(new String(Base64.decode(string,Base64.DEFAULT)));
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mediaPlayer.start();
-                }
-            });
-            mediaPlayer.prepareAsync();
-        }catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        AudioPlayerUtils.getInstance().playBase64(this, string);
+        /*Player player=new Player(seekBar);
+        player.playUrl(new String(Base64.decode(string,Base64.DEFAULT)));*/
+        Log.d("luchixiang", "base64: " + new String(Base64.decode(string, Base64.DEFAULT)));
 
     }
 
-    public void initView()
-    {
-        title=findViewById(R.id.title_voice);
-        author=findViewById(R.id.author_voice);
-        player=findViewById(R.id.player_voice);
-        img=findViewById(R.id.activity_image);
-        seekBar=findViewById(R.id.seekBar);
-        pauseButton=findViewById(R.id.pause);
-        Toolbar toolbar=findViewById(R.id.vocie_toolbar);
+    public void initView() {
+        title = findViewById(R.id.title_voice);
+        author = findViewById(R.id.author_voice);
+        player = findViewById(R.id.player_voice);
+        img = findViewById(R.id.activity_image);
+        seekBar = findViewById(R.id.seekBar);
+        pauseButton = findViewById(R.id.pause);
+        Toolbar toolbar = findViewById(R.id.vocie_toolbar);
         setSupportActionBar(toolbar);
-        ActionBar actionBar=getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle("播放");
         title.setText(voiceTitle);
         author.setText(voiceAuthor);
         player.setText(voicePlayer);
-        VoicePlayPresenter voicePlayPresenter2=new VoicePlayPresenter(this);
+        VoicePlayPresenter voicePlayPresenter2 = new VoicePlayPresenter(this);
         Glide.with(this).load(urlImg).apply(new RequestOptions().fitCenter()).into(img);
     }
 
     @Override
     public void setPresenter(VoicePlayContract.VoicePlayPresenter presenter) {
-        this.voicePlayPresenter=presenter;
+        this.voicePlayPresenter = presenter;
     }
 }
