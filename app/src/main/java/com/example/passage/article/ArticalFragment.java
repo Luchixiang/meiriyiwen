@@ -32,10 +32,10 @@ public class ArticalFragment extends Fragment implements ArticalContract.Article
     }
 
     @Override
-    public void showText(String article_title,String article_author,String article_main) {
-        title.setText(article_title);
-        author.setText(article_author);
-        main.setText(article_main);
+    public void showText(String articleTitle,String articleAuthor,String articleMain) {
+        title.setText(articleTitle);
+        author.setText(articleAuthor);
+        main.setText(articleMain);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ArticalFragment extends Fragment implements ArticalContract.Article
         title=(TextView)view.findViewById(R.id.article_title);
         main=(TextView)view.findViewById(R.id.article_main);
         author=(TextView)view.findViewById(R.id.article_author);
-        articalPresenter=new ArticalPresenter(context,this);
+        articalPresenter=new ArticalPresenter(this);
         presenter.startLoad(url);
         return view;
     }

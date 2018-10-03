@@ -1,8 +1,8 @@
 package com.example.passage.voice;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.speech.tts.Voice;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.passage.R;
+import com.example.passage.voiceplay.VoiceActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +50,29 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
     @NonNull
     @Override
     public VoiceAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context1 = parent.getContext();
+        final Context context1 = parent.getContext();
         LayoutInflater layoutInflater = LayoutInflater.from(context1);
         View view = layoutInflater.inflate(R.layout.item_voice, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        //舰艇动作
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int positon=recyclerView.getChildAdapterPosition(v);
+                CardComponent card=mCards.get(positon);
+                String link=card.getLinkUrl();
+                String imgUrl=card.getImgUrl();
+                String name=card.getVoiceTitle();
+                String author=card.getVoiceAuthor();
+                String player=card.getVoicePlayer();
+                Intent intent=new Intent(context,VoiceActivity.class);
+                intent.putExtra("URL",link);
+                intent.putExtra("URLIMG",imgUrl);
+                intent.putExtra("NAME",name);
+                intent.putExtra("AUTHOR",author);
+                intent.putExtra("PLAYER",player);
+                context.startActivity(intent);
+            }
+        });
         return viewHolder;
     }
     public void ListChanged(List<CardComponent> list, List<Bitmap>bitmaps)
@@ -63,11 +84,10 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (!mCards.isEmpty()) {
             CardComponent card = mCards.get(position);
-            Bitmap bitmap=bitmaps.get(position);
             holder.voicePlayer.setText(card.getVoicePlayer());
             holder.voiceAuthor.setText(card.getVoiceAuthor());
             holder.voiceName.setText(card.getVoiceTitle());
-            holder.img.setImageBitmap(bitmap);
+            Glide.with(context).load(card.getImgUrl()).apply(new RequestOptions().fitCenter()).into(holder.img);
         }
     }
 

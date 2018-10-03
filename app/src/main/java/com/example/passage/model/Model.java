@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Base64;
 import android.util.Log;
 
 import com.example.passage.voice.CardComponent;
@@ -15,47 +16,39 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Model implements ModelContract {
     private Context context;
-    private String article_title="";
-    private String article_main;
-    private String article_author;
-    private CallBack articleCallback;
-    private CallBack voiceCallback;
+    private String articleTitle="";
+    private String articleMain;
+    private String articleAuthor;
+    private ArticleCallBack articleCallback;
+    private VoiceCallBack voiceCallback;
+    private VoicePlayCallBack voicePlayCallBack;
     private List<CardComponent>mCards=new ArrayList<>();
     private List<Bitmap>imgs=new ArrayList<>();
     private int length;
+    private String swfUrl;
     private static final String TAG="luchixiang";
     private static final int SUCCESSOFARTICLE=0x1;
     private static final int SUCCESSOFVOICE=0x2;
-    public Model(Context context) {
-        this.context = context;
-    }
-    public Handler handler=new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what)
-            {
-                case SUCCESSOFARTICLE:
-                    articleCallback.successOfArticle(article_title,article_author,article_main);
-                    break;
-                case SUCCESSOFVOICE:
-                    voiceCallback.successOfVoice(mCards,imgs);
-                    break;
-            }
+    private static final int SUCCESSOFVOICEPLAYER=0x3;
+    private MyHandler myHandler=new MyHandler(this);
+    public Model() {
 
-            return false;
-        }
-    });
+    }
 
     @Override
-    public void getArticle(final String url, final CallBack callBack) {
+    public void getArticle(final String url, final ArticleCallBack callBack) {
         this.articleCallback=callBack;
         new Thread(new Runnable() {
             @Override
@@ -63,18 +56,15 @@ public class Model implements ModelContract {
                 try {
                     Document document= Jsoup.parse(new URL(url),100000);
                     String body=document.toString();
-                    article_title=body.substring(body.indexOf("<h1>")+4,body.indexOf("</h1>"));
-                   //Log.d(TAG, "run: "+article_title);
+                    articleTitle=body.substring(body.indexOf("<h1>")+4,body.indexOf("</h1>"));
                     String body2=body.substring(body.indexOf("</h1>"));
-                    article_author=body2.substring(body2.indexOf("<span>")+6,body2.indexOf("</span>"));
-                    //Log.d(TAG, "run: "+article_author);
+                    articleAuthor=body2.substring(body2.indexOf("<span>")+6,body2.indexOf("</span>"));
                     String body3=body2.substring(body2.indexOf("class=\"article_text\">")+21,body2.indexOf("</div>",body2.indexOf("class=\"article_text\">")));
                     String body4=body3.replaceAll("<p>","  ");
-                    article_main=body4.replaceAll("</p>","\n    ")+"\n\n\n\n\n";
-                    //Log.d(TAG, "run: "+article_main);
+                    articleMain=body4.replaceAll("</p>","\n   ");
                     Message message=new Message();
                     message.what=SUCCESSOFARTICLE;
-                    handler.sendMessage(message);
+                    myHandler.sendMessage(message);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -83,7 +73,7 @@ public class Model implements ModelContract {
     }
 
     @Override
-    public void getVoice(final String url, CallBack callBack) {
+    public void getVoice(final String url, VoiceCallBack callBack) {
         this.voiceCallback=callBack;
         new Thread(new Runnable() {
             @Override
@@ -99,29 +89,24 @@ public class Model implements ModelContract {
                        Element element2=element1.select("div[class=list_author]").first();
                        String string=element2.toString();
                        String voiceTitle=string.substring(string.indexOf("blank\">")+7,string.indexOf("</a>"));
-                       //Log.d(TAG, "run: "+voiceTitle);
                         Element element3=element1.select("div[class=author_name]").first();
                         String string2=element3.toString();
-                       //Log.d(TAG, "run: "+string2);
                         String voiceAuthor=string2.substring(string2.indexOf("author_name\">")+13,string2.indexOf("&nbsp;"));
-                        String voicePlayer=string2.substring(string2.indexOf("主播："),string2.indexOf("</div>"));
-                       //Log.d(TAG, "run: "+voiceAuthor);
-                       //Log.d(TAG, "run: "+voicePlayer);
+                        String voicePlayer="\n"+"   "+string2.substring(string2.indexOf("主播："),string2.indexOf("</div>"));
                        CardComponent cardComponent=new CardComponent();
                        cardComponent.setVoiceAuthor(voiceAuthor);
                        cardComponent.setVoicePlayer(voicePlayer);
                        cardComponent.setVoiceTitle(voiceTitle);
+                       String imgUrl=element1.select(".box_list_img").select("img")
+                               .attr("abs:src");
+                       cardComponent.setImgUrl(imgUrl);
+                       String linkUrl=element1.select(".box_list_img").attr("abs:href");
+                       cardComponent.setLinkUrl(linkUrl);
                        mCards.add(cardComponent);
-                       Element element4=element1.select("img").first();
-                       String string4=element4.toString();
-                       String imgURL1=string4.substring(string4.indexOf("/upload_imgs"),string4.indexOf(">"));
-                       String imgURL2="http://voice.meiriyiwen.com"+imgURL1;
-                       //Log.d(TAG, "run: "+imgURL2);
-                       getURLimg(imgURL2);
                    }
                    Message message=new Message();
                    message.what=SUCCESSOFVOICE;
-                   handler.sendMessage(message);
+                   myHandler.sendMessage(message);
                }
                catch (Exception e)
                {
@@ -130,7 +115,7 @@ public class Model implements ModelContract {
             }
         }).start();
     }
-    public void getURLimg(final String url)
+    /*public void getURLimg(final String url)
     {
         Bitmap bp;
         Log.d(TAG, "getURLimg: "+url);
@@ -142,7 +127,7 @@ public class Model implements ModelContract {
             connection.setUseCaches(false);
             InputStream inputStream=connection.getInputStream();
             Log.d(TAG, "getURLimg: "+1);
-            bp= BitmapFactory.decodeStream(inputStream);
+            bp= BitmapFactory.decodeStream(inputStream,null,new BitmapFactory.Options());
             imgs.add(bp);
             Log.d(TAG, "getURLimg: "+imgs.size());
             inputStream.close();
@@ -151,5 +136,59 @@ public class Model implements ModelContract {
         {
             e.printStackTrace();
         }
+    }*/
+    private static class MyHandler extends Handler{
+        private final WeakReference<Model> mModel;
+        public MyHandler(Model model)
+        {
+            mModel=new WeakReference<>(model);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            Model model=mModel.get();
+            super.handleMessage(msg);
+            if (model!=null)
+            {
+                switch (msg.what)
+                {
+                    case SUCCESSOFARTICLE:
+                        model.articleCallback.successOfArticle(model.articleTitle,model.articleAuthor,model.articleMain);
+                        break;
+                    case SUCCESSOFVOICE:
+                        model.voiceCallback.successOfVoice(model.mCards,model.imgs);
+                        break;
+                    case SUCCESSOFVOICEPLAYER:
+                        model.voicePlayCallBack.suceessOfVoicePlay(model.swfUrl);
+                }
+            }
+        }
+    }
+
+    public void getVoicePlay(final String url,VoicePlayCallBack voicePlayCallBack)
+    {
+        this.voicePlayCallBack=voicePlayCallBack;
+        //Log.d(TAG, "getVoicePlay: "+url);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Document document=Jsoup.parse(new URL(url),60000);
+                    Element element=document.select("p[class=p_file]").first();
+                    String string=element.select("embed").attr("abs:src");
+                    String rex="=(.*?)&";
+                    Pattern pattern=Pattern.compile(rex);//匹配规则
+                    Matcher matcher=pattern.matcher(string);
+                    matcher.find();
+                    swfUrl=matcher.group(1);
+                    Message message=new Message();
+                    message.what=SUCCESSOFVOICEPLAYER;
+                    myHandler.sendMessage(message);
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }
