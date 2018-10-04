@@ -32,4 +32,9 @@ public class VoicePlayPresenter implements VoicePlayContract.VoicePlayPresenter 
     public void startLoad(String string) {
         model.getVoicePlay(string, voicePlayCallBack);
     }
+
+    @Override
+    public void onDestory() {
+
+    }
 }

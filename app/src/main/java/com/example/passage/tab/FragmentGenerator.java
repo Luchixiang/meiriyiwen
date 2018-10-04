@@ -13,7 +13,7 @@ import com.example.passage.shelf.ShelfFragment;
 import com.example.passage.voice.VoiceFragment;
 
 public class FragmentGenerator {
-    public static final String[] mTabTitles = {"文章", "声音", "书架"};
+    public static final String[] mTabTitles = {"文章", "声音", "收藏"};
 
     public static Fragment[] getFragments() {
         Fragment[] fragments = new Fragment[3];

@@ -1,27 +1,26 @@
-package com.example.passage.shelf;
+package com.example.passage.model.scrouse;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-@Database(entities = {Article.class}, version = 1)
-public abstract class ArticleRoomDataBase extends RoomDatabase {
+@Database(entities = {ArticleCash.class, Article.class},version = 1,exportSchema = false)
+public abstract class ArticleDataBase extends RoomDatabase{
     public abstract ArticleDao articleDao();
+    public abstract ArticleCashDao articleCashDao();
+    private static volatile ArticleDataBase INSTANCE;
 
-    private static volatile ArticleRoomDataBase INSTANCE;
-
-    static ArticleRoomDataBase getDatabase(final Context context) {
+   public static ArticleDataBase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            synchronized (ArticleRoomDataBase.class) {
+            synchronized (ArticleDataBase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            ArticleRoomDataBase.class, "word_database")
+                            ArticleDataBase.class, "word_database")
                             .build();
                 }
             }
         }
         return INSTANCE;
     }
-
 }

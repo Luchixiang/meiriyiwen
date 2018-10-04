@@ -1,4 +1,4 @@
-package com.example.passage.articlecash;
+package com.example.passage.model.scrouse;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -15,16 +15,6 @@ import android.support.annotation.NonNull;
         private String articleAuthor;
         @ColumnInfo(name = "articleMain")
         private String articleMain;
-        @ColumnInfo(name = "isFavorited")
-        private boolean isFavorited = false;
-
-        public boolean isFavorited() {
-            return isFavorited;
-        }
-
-        public void setFavorited(boolean favorited) {
-            isFavorited = favorited;
-        }
 
         public String getArticleTitle() {
             return articleTitle;

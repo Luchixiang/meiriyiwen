@@ -1,25 +1,34 @@
 package com.example.passage.article;
 
+import android.app.Application;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.passage.R;
+import com.example.passage.model.scrouse.Article;
+import com.example.passage.model.scrouse.ArticleCash;
+import com.example.passage.utils.NetWorkUtil;
 
 public class ArticalFragment extends Fragment implements ArticalContract.ArticleView, View.OnClickListener {
     private ArticalContract.ArticlePresenter presenter;
     private ArticalPresenter articalPresenter;
-    private String url = "https://www.meiriyiwen.com/random";
+    private String url = "https://www.meiriyiwen.com";
     private String randomUrl = "https://www.meiriyiwen.com/random";
     private TextView title;
     private TextView main;
     private TextView author;
+    private Article article = new Article();
+    private ArticleCash articleCash=new ArticleCash();
+    private ScrollView scrollView;
     private FloatingActionButton favorite;
     private FloatingActionButton next;
 
@@ -41,15 +50,20 @@ public class ArticalFragment extends Fragment implements ArticalContract.Article
         title.setText(articleTitle);
         author.setText(articleAuthor);
         main.setText(articleMain);
+        article.setArticleAuthor(articleAuthor);
+        article.setArticleMain(articleMain);
+        article.setArticleTitle(articleTitle);
+        articleCash.setArticleAuthor(articleAuthor);
+        articleCash.setArticleMain(articleMain);
+        articleCash.setArticleTitle(articleTitle);
+        presenter.addCash(articleCash);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Context context = getActivity();
         View view = inflater.inflate(R.layout.fragment_artical, container, false);
         initView(view);
-        presenter.startLoad(url);
         return view;
     }
 
@@ -58,6 +72,7 @@ public class ArticalFragment extends Fragment implements ArticalContract.Article
         main = (TextView) view.findViewById(R.id.article_main);
         author = (TextView) view.findViewById(R.id.article_author);
         next = view.findViewById(R.id.next);
+        scrollView = view.findViewById(R.id.scv);
         favorite = view.findViewById(R.id.favorite);
         next.setOnClickListener(this);
         favorite.setOnClickListener(this);
@@ -70,8 +85,8 @@ public class ArticalFragment extends Fragment implements ArticalContract.Article
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void showwToast(String string) {
+        Toast.makeText(getActivity(), string, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -79,9 +94,42 @@ public class ArticalFragment extends Fragment implements ArticalContract.Article
         switch (v.getId()) {
             case R.id.next:
                 presenter.startLoad(randomUrl);
+                scrollView.fullScroll(View.FOCUS_UP);
                 break;
             case R.id.favorite:
+                article.setFavorited(true);
+                presenter.addFavorite(article);
                 break;
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("luchixiang", "onStop: " + 1);
+    }
+
+    @Override
+    public Application getApplication() {
+        return getActivity().getApplication();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (NetWorkUtil.isNetworkAvailable(getActivity())) {
+            presenter.startLoad(url);
+        } else {
+            presenter.getCash();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("luchixiang", "onDestroy: " + 1);
+        presenter.onDestory();
+        presenter = null;
+        articalPresenter = null;
     }
 }

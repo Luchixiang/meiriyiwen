@@ -1,4 +1,4 @@
-package com.example.passage.shelf;
+package com.example.passage.model.scrouse;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;

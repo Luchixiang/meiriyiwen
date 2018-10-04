@@ -27,6 +27,16 @@ public class PresenterOfVoice implements VoiceContract.VoicePresenter {
         model.getVoice(string, voiceCallback);
     }
 
+    @Override
+    public void onDestory() {
+        voiceView=null;
+        if (model!=null)
+        {
+            model.cancelTask();
+            model=null;
+        }
+    }
+
     public void creatModel() {
         voiceCallback = new ModelContract.VoiceCallBack() {
 

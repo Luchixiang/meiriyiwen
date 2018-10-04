@@ -64,7 +64,10 @@ public class VoiceFragment extends Fragment implements VoiceContract.VoiceView {
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onDestroy() {
+        super.onDestroy();
+        voicePresenter.onDestory();
+        voicePresenter=null;
+
     }
 }

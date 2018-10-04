@@ -1,10 +1,10 @@
 package com.example.passage.shelf;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.example.passage.base.BasePresenter;
 import com.example.passage.base.BaseView;
+import com.example.passage.model.scrouse.Article;
 
 import java.util.List;
 

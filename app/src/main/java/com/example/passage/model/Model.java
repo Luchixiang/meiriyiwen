@@ -3,14 +3,13 @@ package com.example.passage.model;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Base64;
 import android.util.Log;
 
-import com.example.passage.shelf.Article;
-import com.example.passage.shelf.ArticleRoomRespority;
+import com.example.passage.model.scrouse.ArticleCash;
+import com.example.passage.model.scrouse.ArticleRespority;
+import com.example.passage.model.scrouse.Article;
 import com.example.passage.voice.CardComponent;
 
 import org.jsoup.Jsoup;
@@ -18,11 +17,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -38,9 +34,11 @@ public class Model implements ModelContract {
     private VoiceCallBack voiceCallback;
     private VoicePlayCallBack voicePlayCallBack;
     private FavoriteCallBack favoriteCallBack;
+    private cashCallBack cashCallBack;
     private List<Article> favoriteArticles=new ArrayList<>();
     private List<CardComponent> mCards = new ArrayList<>();
     private List<Bitmap> imgs = new ArrayList<>();
+    private ArticleRespority articleRespority;
     private int length;
     private String swfUrl;
     private static final String TAG = "luchixiang";
@@ -70,8 +68,8 @@ public class Model implements ModelContract {
 
                     StringBuilder articleBuilder = new StringBuilder();
                     for (Element e : elements) {
-                        //判空
-                        articleBuilder.append("\n").append(e.text());
+                        if (!e.text().isEmpty()){
+                        articleBuilder.append("\n").append(e.text()+"  ");}
                     }
                     articleMain = articleBuilder.toString();
                     Message message = new Message();
@@ -197,25 +195,54 @@ public class Model implements ModelContract {
             }
         }).start();
     }
-    public void getFavorite(FavoriteCallBack favoriteCallBack, Application application)
+    public void getCash(final cashCallBack cashCallBack,Application application)
     {
-        this.favoriteCallBack=favoriteCallBack;
-        ArticleRoomRespority articleRoomRespority=new ArticleRoomRespority(application);
-        favoriteArticles=articleRoomRespority.getFavorites();
-        favoriteCallBack.successOfGetFavorite(favoriteArticles);
+        this.cashCallBack=cashCallBack;
+        articleRespority=ArticleRespority.getINSTANCE(application);
+        articleRespority.getArticleCash(new ArticleRespority.resporityCallback() {
+            @Override
+            public void favoriteCallBack(List<Article> articles) {
+            }
+
+            @Override
+            public void cashCallBack(List<ArticleCash> articleCashes) {
+                cashCallBack.successOfGetCash(articleCashes);
+                Log.d(TAG, "cashCallBack: "+articleCashes.get(0).getArticleTitle());
+            }
+        });
     }
-    public void addFavorite(FavoriteCallBack favoriteCallBack,Article article,Application application)
+    public void addCash(Application application,ArticleCash articleCash)
     {
-        this.favoriteCallBack=favoriteCallBack;
-        ArticleRoomRespority articleRoomRespority=new ArticleRoomRespority(application);
-        articleRoomRespority.insertFavorite(article);
-        favoriteCallBack.successOfAddFavorite();
+        articleRespority=ArticleRespority.getINSTANCE(application);
+        articleRespority.insertCash(articleCash);
+        Log.d(TAG, "addCash: "+articleCash.getArticleTitle());
     }
-    public void deleteFavorite(FavoriteCallBack favoriteCallBack,Article a ,Application application)
+    public void getFavorite(final FavoriteCallBack favoriteCallBack, Application application)
     {
         this.favoriteCallBack=favoriteCallBack;
-        ArticleRoomRespority articleRoomRespority=new ArticleRoomRespority(application);
-        articleRoomRespority.deleteFavorite(a);
-        favoriteCallBack.successOfDeleteFavorite();
+        articleRespority=ArticleRespority.getINSTANCE(application);
+        articleRespority.getFavorites(new ArticleRespority.resporityCallback() {
+            @Override
+            public void favoriteCallBack(List<Article> favoriteArticles) {
+                favoriteCallBack.successOfGetFavorite(favoriteArticles);
+                Log.d(TAG, "favoriteCallBack: "+favoriteArticles.get(0).getArticleTitle());
+            }
+            @Override
+            public void cashCallBack(List<ArticleCash> articleCashes) {
+            }
+        });
+    }
+    public void addFavorite(ArticleCallBack articleCallBack,Article article,Application application)
+    {
+        this.articleCallback=articleCallBack;
+        articleRespority=ArticleRespority.getINSTANCE(application);
+        articleRespority.insertFavorite(article);
+        Log.d(TAG, "addFavorite: "+article.getArticleTitle());
+        articleCallBack.successOfAddFavorite();
+    }
+
+    @Override
+    public void cancelTask() {
+        articleRespority.deleteTasks();
     }
 }

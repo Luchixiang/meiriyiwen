@@ -2,7 +2,6 @@ package com.example.passage.shelf;
 
 import android.app.Application;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,10 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.passage.R;
+import com.example.passage.model.scrouse.Article;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,7 @@ public class ShelfFragment extends Fragment implements FavoriteContract.Favorite
         recyclerView.setAdapter(favoriteAdapter);
         favoriteAdapter.notifyDataSetChanged();
         FavoritePresenter favoritePresenter=new FavoritePresenter(this);
-        presenter.startLoad("");
+        presenter.getFavorite();
         return view;
 
     }
@@ -69,5 +68,12 @@ public class ShelfFragment extends Fragment implements FavoriteContract.Favorite
     @Override
     public void setPresenter(FavoriteContract.FavoritePresenter presenter) {
         this.presenter=presenter;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.onDestory();
+        presenter=null;
     }
 }
