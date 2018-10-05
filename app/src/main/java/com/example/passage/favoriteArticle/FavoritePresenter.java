@@ -1,4 +1,4 @@
-package com.example.passage.shelf;
+package com.example.passage.favoriteArticle;
 
 import com.example.passage.model.Model;
 import com.example.passage.model.ModelContract;
@@ -24,7 +24,7 @@ public class FavoritePresenter implements FavoriteContract.FavoritePresenter{
             @Override
             public void successOfGetFavorite(List<Article> articles) {
                 favoriteArticle.clear();
-                if (articles!=null)
+                if (articles!=null&&articles.size()!=0)
                 {favoriteArticle.addAll(articles);}
                 favoriteView.showArticle(articles);
             }

@@ -5,10 +5,13 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-@Database(entities = {ArticleCash.class, Article.class},version = 1,exportSchema = false)
+import com.example.passage.voice.Voice;
+
+@Database(entities = {ArticleCash.class, Article.class, Voice.class},version = 1,exportSchema = false)
 public abstract class ArticleDataBase extends RoomDatabase{
     public abstract ArticleDao articleDao();
     public abstract ArticleCashDao articleCashDao();
+    public abstract VoiceDao  voiceDao();
     private static volatile ArticleDataBase INSTANCE;
 
    public static ArticleDataBase getDatabase(final Context context) {

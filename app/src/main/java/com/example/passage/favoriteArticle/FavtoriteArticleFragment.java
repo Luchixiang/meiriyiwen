@@ -1,4 +1,4 @@
-package com.example.passage.shelf;
+package com.example.passage.favoriteArticle;
 
 import android.app.Application;
 import android.content.Context;
@@ -17,13 +17,13 @@ import com.example.passage.model.scrouse.Article;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShelfFragment extends Fragment implements FavoriteContract.FavoriteView{
+public class FavtoriteArticleFragment extends Fragment implements FavoriteContract.FavoriteView{
     private RecyclerView recyclerView;
     private List<Article> favoriteArticles = new ArrayList<>();
     private FavoriteAdapter favoriteAdapter;
     private FavoriteContract.FavoritePresenter presenter;
-    public static ShelfFragment newInstance() {
-        ShelfFragment fragment = new ShelfFragment();
+    public static FavtoriteArticleFragment newInstance() {
+        FavtoriteArticleFragment fragment = new FavtoriteArticleFragment();
         return fragment;
     }
 
@@ -45,18 +45,23 @@ public class ShelfFragment extends Fragment implements FavoriteContract.Favorite
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Context context = getActivity();
         View view = inflater.inflate(R.layout.fragment_shelf, container, false);
-        recyclerView = view.findViewById(R.id.favorite_artiles);
+        recyclerView=view.findViewById(R.id.favorite_artiles);
+        Context context = getActivity();
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
         favoriteAdapter = new FavoriteAdapter(context, favoriteArticles, recyclerView);
         recyclerView.setAdapter(favoriteAdapter);
         favoriteAdapter.notifyDataSetChanged();
         FavoritePresenter favoritePresenter=new FavoritePresenter(this);
-        presenter.getFavorite();
         return view;
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        presenter.getFavorite();
     }
 
     @Override

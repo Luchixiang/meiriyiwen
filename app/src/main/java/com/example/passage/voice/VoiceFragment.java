@@ -2,7 +2,6 @@ package com.example.passage.voice;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +21,7 @@ public class VoiceFragment extends Fragment implements VoiceContract.VoiceView {
     private VoiceContract.VoicePresenter voicePresenter;
     private String url = "http://voice.meiriyiwen.com/";
     private VoiceAdapter voiceAdapter;
-    private List<CardComponent> mCards = new ArrayList<>();
+    private List<Voice> mCards = new ArrayList<>();
     private RecyclerView recyclerView;
 
     public static VoiceFragment newInstance() {
@@ -41,7 +40,7 @@ public class VoiceFragment extends Fragment implements VoiceContract.VoiceView {
     }
 
     @Override
-    public void listChanged(List<CardComponent> list, List<Bitmap> bitmaps) {
+    public void listChanged(List<Voice> list, List<Bitmap> bitmaps) {
         voiceAdapter.ListChanged(list, bitmaps);
         Log.d("luchixiang", "listChanged: " + bitmaps.size());
         voiceAdapter.notifyDataSetChanged();
@@ -58,9 +57,14 @@ public class VoiceFragment extends Fragment implements VoiceContract.VoiceView {
         voiceAdapter = new VoiceAdapter(context, mCards, recyclerView);
         recyclerView.setAdapter(voiceAdapter);
         voiceAdapter.notifyDataSetChanged();
+        return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         PresenterOfVoice presenter = new PresenterOfVoice(this);
         voicePresenter.startLoad(url);
-        return view;
     }
 
     @Override

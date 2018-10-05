@@ -2,6 +2,7 @@ package com.example.passage.voiceplay;
 
 import com.example.passage.model.Model;
 import com.example.passage.model.ModelContract;
+import com.example.passage.voice.Voice;
 
 public class VoicePlayPresenter implements VoicePlayContract.VoicePlayPresenter {
     private VoicePlayContract.VoicePlayView voicePlayView;
@@ -17,6 +18,11 @@ public class VoicePlayPresenter implements VoicePlayContract.VoicePlayPresenter 
     public void creatModel() {
         voicePlayCallBack = new ModelContract.VoicePlayCallBack() {
             @Override
+            public void successOfAddVoicae(String s) {
+                voicePlayView.showToast(s);
+            }
+
+            @Override
             public void suceessOfVoicePlay(String s) {
                 voicePlayView.base64(s);
             }
@@ -31,6 +37,11 @@ public class VoicePlayPresenter implements VoicePlayContract.VoicePlayPresenter 
     @Override
     public void startLoad(String string) {
         model.getVoicePlay(string, voicePlayCallBack);
+    }
+
+    @Override
+    public void addVoiceFavorite(Voice voice) {
+        model.addVoiceFavorite(voicePlayCallBack,voice,voicePlayView.gettApplication());
     }
 
     @Override

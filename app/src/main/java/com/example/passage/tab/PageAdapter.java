@@ -46,8 +46,7 @@ public class PageAdapter extends FragmentPagerAdapter {
                     fragment = fragments[2];
                     break;
                 case 3:
-                    fragment = fragments[3];
-                    break;
+                    fragment=fragments[3];
             }
             mfragments.put(pos, fragment);
         }

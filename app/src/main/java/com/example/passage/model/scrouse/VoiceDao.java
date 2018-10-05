@@ -6,17 +6,19 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
+import com.example.passage.voice.Voice;
+
 import java.util.List;
 
 @Dao
-public interface ArticleDao {
+public interface VoiceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertFavorite(Article article);
+    void insertVoice(Voice voice);
 
-    @Query("SELECT*FROM article_table")
-    List<Article> getFavorite();
+    @Query("SELECT*FROM voice_favorite")
+    List<Voice> getVoiceFavorite();
 
 
     @Delete
-    void deleteFavorite(Article article);
+    void deleteVoice(Voice voice);
 }

@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 
 import com.example.passage.model.scrouse.Article;
 import com.example.passage.model.scrouse.ArticleCash;
-import com.example.passage.voice.CardComponent;
+import com.example.passage.voice.Voice;
 
 import java.util.List;
 
@@ -19,15 +19,19 @@ public interface ModelContract {
     }
 
     interface VoiceCallBack extends CallBack {
-        void successOfVoice(List<CardComponent> list, List<Bitmap> bitmaps);
+        void successOfVoice(List<Voice> list, List<Bitmap> bitmaps);
 
     }
 
     interface VoicePlayCallBack extends CallBack {
         void suceessOfVoicePlay(String s);
+        void successOfAddVoicae(String s);
     }
     interface FavoriteCallBack extends CallBack{
         void successOfGetFavorite(List<Article>articles);
+    }
+    interface FavoriteAudioCallBack extends CallBack{
+        void successofGetAudioFavorite(List<Voice>cards);
     }
     interface cashCallBack extends CallBack{
         void successOfGetCash(List<ArticleCash>articleCashes);

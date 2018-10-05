@@ -1,4 +1,4 @@
-package com.example.passage.shelf;
+package com.example.passage.favoriteArticle;
 
 import android.content.Context;
 import android.content.Intent;

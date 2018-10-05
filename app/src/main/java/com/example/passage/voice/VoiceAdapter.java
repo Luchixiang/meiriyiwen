@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> {
     private Context context;
-    private List<CardComponent> mCards = new ArrayList<>();
+    private List<Voice> mCards = new ArrayList<>();
     private RecyclerView recyclerView;
     private List<Bitmap> bitmaps = new ArrayList<>();
 
@@ -41,7 +42,7 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
         }
     }
 
-    public VoiceAdapter(Context context, List<CardComponent> mCards, RecyclerView recyclerView) {
+    public VoiceAdapter(Context context, List<Voice> mCards, RecyclerView recyclerView) {
         this.context = context;
         this.mCards = mCards;
         this.recyclerView = recyclerView;
@@ -58,7 +59,7 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
             @Override
             public void onClick(View v) {
                 int positon = recyclerView.getChildAdapterPosition(v);
-                CardComponent card = mCards.get(positon);
+                Voice card = mCards.get(positon);
                 String link = card.getLinkUrl();
                 String imgUrl = card.getImgUrl();
                 String name = card.getVoiceTitle();
@@ -76,7 +77,7 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
         return viewHolder;
     }
 
-    public void ListChanged(List<CardComponent> list, List<Bitmap> bitmaps) {
+    public void ListChanged(List<Voice> list, List<Bitmap> bitmaps) {
         this.mCards = list;
         this.bitmaps = bitmaps;
     }
@@ -84,7 +85,7 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (!mCards.isEmpty()) {
-            CardComponent card = mCards.get(position);
+            Voice card = mCards.get(position);
             holder.voicePlayer.setText(card.getVoicePlayer());
             holder.voiceAuthor.setText(card.getVoiceAuthor());
             holder.voiceName.setText(card.getVoiceTitle());

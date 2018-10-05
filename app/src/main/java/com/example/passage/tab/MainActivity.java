@@ -1,6 +1,7 @@
 package com.example.passage.tab;
 
 import android.app.Activity;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
@@ -11,23 +12,35 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.passage.R;
+import com.example.passage.utils.NetWorkChangeBrodcast;
 
 public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private IntentFilter intentFilter;
+    private NetWorkChangeBrodcast workChangeBrodcast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.hideBottomUIMenu(this);
         initView();
+        intentFilter=new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        workChangeBrodcast=new NetWorkChangeBrodcast();
+        registerReceiver(workChangeBrodcast,intentFilter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.hideBottomUIMenu(this);
     }
 
     public void initView() {
         tabLayout = (TabLayout) findViewById(R.id.tab);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new PageAdapter(getSupportFragmentManager(), 3));
+        viewPager.setAdapter(new PageAdapter(getSupportFragmentManager(), 4));
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -45,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             tabLayout.addTab(tabLayout.newTab().setCustomView(FragmentGenerator.getTabView(this, i)));
         }
     }
@@ -61,6 +74,12 @@ public class MainActivity extends AppCompatActivity {
                     .SYSTEM_UI_FLAG_FULLSCREEN;
             decorView.setSystemUiVisibility(uiOptions);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(workChangeBrodcast);
     }
 }
 

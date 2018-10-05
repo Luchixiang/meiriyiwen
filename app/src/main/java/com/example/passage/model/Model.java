@@ -10,7 +10,7 @@ import android.util.Log;
 import com.example.passage.model.scrouse.ArticleCash;
 import com.example.passage.model.scrouse.ArticleRespority;
 import com.example.passage.model.scrouse.Article;
-import com.example.passage.voice.CardComponent;
+import com.example.passage.voice.Voice;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -36,7 +36,7 @@ public class Model implements ModelContract {
     private FavoriteCallBack favoriteCallBack;
     private cashCallBack cashCallBack;
     private List<Article> favoriteArticles=new ArrayList<>();
-    private List<CardComponent> mCards = new ArrayList<>();
+    private List<Voice> mCards = new ArrayList<>();
     private List<Bitmap> imgs = new ArrayList<>();
     private ArticleRespority articleRespority;
     private int length;
@@ -102,7 +102,7 @@ public class Model implements ModelContract {
                         String string2 = element3.toString();
                         String voiceAuthor = string2.substring(string2.indexOf("author_name\">") + 13, string2.indexOf("&nbsp;"));
                         String voicePlayer = "\n" + "   " + string2.substring(string2.indexOf("主播："), string2.indexOf("</div>"));
-                        CardComponent cardComponent = new CardComponent();
+                        Voice cardComponent=new Voice();
                         cardComponent.setVoiceAuthor(voiceAuthor);
                         cardComponent.setVoicePlayer(voicePlayer);
                         cardComponent.setVoiceTitle(voiceTitle);
@@ -225,7 +225,7 @@ public class Model implements ModelContract {
             @Override
             public void favoriteCallBack(List<Article> favoriteArticles) {
                 favoriteCallBack.successOfGetFavorite(favoriteArticles);
-                Log.d(TAG, "favoriteCallBack: "+favoriteArticles.get(0).getArticleTitle());
+                //Log.d(TAG, "favoriteCallBack: "+favoriteArticles.get(0).getArticleTitle());
             }
             @Override
             public void cashCallBack(List<ArticleCash> articleCashes) {
@@ -244,5 +244,22 @@ public class Model implements ModelContract {
     @Override
     public void cancelTask() {
         articleRespority.deleteTasks();
+    }
+    public void getFavoriteAudio(final FavoriteAudioCallBack favoriteAudioCallBack, Application application)
+    {
+        articleRespority=ArticleRespority.getINSTANCE(application);
+        articleRespority.getVoiceFavorite(new ArticleRespority.resorityVoiceCallback() {
+            @Override
+            public void getVoiceCallBack(List<Voice> voices) {
+                favoriteAudioCallBack.successofGetAudioFavorite(voices);
+            }
+        });
+    }
+    public void addVoiceFavorite(VoicePlayCallBack voicePlayCallBack,Voice voice,Application application)
+    {
+        this.voicePlayCallBack=voicePlayCallBack;
+        articleRespority=ArticleRespority.getINSTANCE(application);
+        articleRespority.insertVoiceFavorite(voice);
+        voicePlayCallBack.successOfAddVoicae("收藏成功");
     }
 }

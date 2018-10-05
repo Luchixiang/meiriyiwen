@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,8 +30,8 @@ public class ArticalFragment extends Fragment implements ArticalContract.Article
     private Article article = new Article();
     private ArticleCash articleCash=new ArticleCash();
     private ScrollView scrollView;
-    private FloatingActionButton favorite;
-    private FloatingActionButton next;
+    private ImageView favorite;
+    private ImageView next;
 
     public ArticalFragment() {
     }
@@ -93,12 +94,19 @@ public class ArticalFragment extends Fragment implements ArticalContract.Article
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.next:
-                presenter.startLoad(randomUrl);
+                if (NetWorkUtil.isNetworkAvailable(getActivity()))
+                {presenter.startLoad(randomUrl);
                 scrollView.fullScroll(View.FOCUS_UP);
+                //要在这里判断是否喜欢
+                favorite.setImageResource(R.drawable.nofavorite);}
+                else {
+                    Toast.makeText(getActivity(),"请检查网络状况",Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.favorite:
                 article.setFavorited(true);
                 presenter.addFavorite(article);
+                favorite.setImageResource(R.drawable.isfavorite);
                 break;
         }
     }

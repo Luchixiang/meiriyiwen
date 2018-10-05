@@ -1,6 +1,5 @@
 package com.example.passage.voice;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.example.passage.model.Model;
@@ -13,7 +12,7 @@ public class PresenterOfVoice implements VoiceContract.VoicePresenter {
     private VoiceContract.VoiceView voiceView;
     private ModelContract.VoiceCallBack voiceCallback;
     private Model model;
-    private List<CardComponent> mCards = new ArrayList<>();
+    private List<Voice> mCards = new ArrayList<>();
     private List<Bitmap> bitmaps = new ArrayList<>();
 
     public PresenterOfVoice(VoiceContract.VoiceView voiceView) {
@@ -41,7 +40,7 @@ public class PresenterOfVoice implements VoiceContract.VoicePresenter {
         voiceCallback = new ModelContract.VoiceCallBack() {
 
             @Override
-            public void successOfVoice(List<CardComponent> list, List<Bitmap> imgs) {
+            public void successOfVoice(List<Voice> list, List<Bitmap> imgs) {
                 mCards.clear();
                 mCards.addAll(list);
                 bitmaps.clear();
