@@ -3,6 +3,7 @@ package com.example.passage.favoriteArticle;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.passage.R;
-import com.example.passage.model.scrouse.Article;
+import com.example.passage.model.scrouse.articlelike.Article;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +24,7 @@ public class FavtoriteArticleFragment extends Fragment implements FavoriteContra
     private FavoriteAdapter favoriteAdapter;
     private FavoriteContract.FavoritePresenter presenter;
     public static FavtoriteArticleFragment newInstance() {
-        FavtoriteArticleFragment fragment = new FavtoriteArticleFragment();
-        return fragment;
+        return new FavtoriteArticleFragment();
     }
 
     @Override
@@ -39,11 +39,13 @@ public class FavtoriteArticleFragment extends Fragment implements FavoriteContra
 
     @Override
     public Application gettApplication() {
+        if (getActivity()!=null)
         return getActivity().getApplication();
+        else return null;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shelf, container, false);
         recyclerView=view.findViewById(R.id.favorite_artiles);

@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 import com.example.passage.base.BasePresenter;
 import com.example.passage.base.BaseView;
+import com.example.passage.model.scrouse.voice.Voice;
 
 import java.util.List;
 

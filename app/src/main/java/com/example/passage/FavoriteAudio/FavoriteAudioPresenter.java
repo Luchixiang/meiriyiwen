@@ -2,7 +2,7 @@ package com.example.passage.FavoriteAudio;
 
 import com.example.passage.model.Model;
 import com.example.passage.model.ModelContract;
-import com.example.passage.voice.Voice;
+import com.example.passage.model.scrouse.voice.Voice;
 
 import java.util.ArrayList;
 import java.util.List;

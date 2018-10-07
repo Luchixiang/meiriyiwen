@@ -1,19 +1,16 @@
-package com.example.passage.voice;
+package com.example.passage.model.scrouse.voice;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.widget.ImageView;
-import android.widget.TextView;
+
 @Entity(tableName = "voice_favorite")
 public class Voice {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "voiceTitle")
-    private String voiceTitle;
+    private String voiceTitle="";
     @ColumnInfo(name = "voiceAuthor")
     private String voiceAuthor;
     @ColumnInfo(name = "voicePlayer")
@@ -22,6 +19,16 @@ public class Voice {
     private String linkUrl;
     @ColumnInfo(name = "mp3Url")
     private String mp3Url;
+    private boolean isFavorite=false;
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
     public String getMp3Url() {
         return mp3Url;
     }
@@ -51,7 +58,7 @@ public class Voice {
         return voiceTitle;
     }
 
-    public void setVoiceTitle(String voiceTitle) {
+    public void setVoiceTitle(@NonNull String  voiceTitle) {
         this.voiceTitle = voiceTitle;
     }
 

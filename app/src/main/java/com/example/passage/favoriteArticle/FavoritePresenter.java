@@ -2,7 +2,7 @@ package com.example.passage.favoriteArticle;
 
 import com.example.passage.model.Model;
 import com.example.passage.model.ModelContract;
-import com.example.passage.model.scrouse.Article;
+import com.example.passage.model.scrouse.articlelike.Article;
 
 import java.util.ArrayList;
 import java.util.List;

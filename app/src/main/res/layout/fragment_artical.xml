@@ -54,7 +54,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/next" />
+                android:src="@drawable/next"/>
         </RelativeLayout>
     </LinearLayout>
 </ScrollView>

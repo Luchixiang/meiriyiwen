@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.passage.R;
-import com.example.passage.model.scrouse.Article;
+import com.example.passage.model.scrouse.articlelike.Article;
 
 import java.util.ArrayList;
 import java.util.List;

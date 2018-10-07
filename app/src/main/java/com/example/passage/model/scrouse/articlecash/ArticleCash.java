@@ -1,4 +1,4 @@
-package com.example.passage.model.scrouse;
+package com.example.passage.model.scrouse.articlecash;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
         @PrimaryKey
         @NonNull
         @ColumnInfo(name = "articleTitle")
-        private String articleTitle;
+        private String articleTitle="";
         @ColumnInfo(name = "articleAuthor")
         private String articleAuthor;
         @ColumnInfo(name = "articleMain")

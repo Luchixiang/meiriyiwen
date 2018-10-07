@@ -1,9 +1,7 @@
 package com.example.passage.article;
 
 import android.app.Application;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,8 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.passage.R;
-import com.example.passage.model.scrouse.Article;
-import com.example.passage.model.scrouse.ArticleCash;
+import com.example.passage.model.scrouse.articlelike.Article;
+import com.example.passage.model.scrouse.articlecash.ArticleCash;
 import com.example.passage.utils.NetWorkUtil;
 
 public class ArticalFragment extends Fragment implements ArticalContract.ArticleView, View.OnClickListener {
@@ -46,19 +44,6 @@ public class ArticalFragment extends Fragment implements ArticalContract.Article
         super.onCreate(savedInstanceState);
     }
 
-    @Override
-    public void showText(String articleTitle, String articleAuthor, String articleMain) {
-        title.setText(articleTitle);
-        author.setText(articleAuthor);
-        main.setText(articleMain);
-        article.setArticleAuthor(articleAuthor);
-        article.setArticleMain(articleMain);
-        article.setArticleTitle(articleTitle);
-        articleCash.setArticleAuthor(articleAuthor);
-        articleCash.setArticleMain(articleMain);
-        articleCash.setArticleTitle(articleTitle);
-        presenter.addCash(articleCash);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,7 +64,32 @@ public class ArticalFragment extends Fragment implements ArticalContract.Article
         favorite.setOnClickListener(this);
         articalPresenter = new ArticalPresenter(this);
     }
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (getActivity()!=null)
+        {
+            if (NetWorkUtil.isNetworkAvailable(getActivity())) {
+                presenter.startLoad(url);
+            } else {
+                presenter.getCash();
+            }
+        }
+    }
+    @Override
+    public void showText(String articleTitle, String articleAuthor, String articleMain) {
+        title.setText(articleTitle);
+        author.setText(articleAuthor);
+        main.setText(articleMain);
+        presenter.QueryFavorite(articleTitle);
+        article.setArticleAuthor(articleAuthor);
+        article.setArticleMain(articleMain);
+        article.setArticleTitle(articleTitle);
+        articleCash.setArticleAuthor(articleAuthor);
+        articleCash.setArticleMain(articleMain);
+        articleCash.setArticleTitle(articleTitle);
+        presenter.addCash(articleCash);
+    }
     @Override
     public void setPresenter(ArticalContract.ArticlePresenter presenter) {
         this.presenter = presenter;
@@ -94,19 +104,25 @@ public class ArticalFragment extends Fragment implements ArticalContract.Article
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.next:
+                if (getActivity()!=null)
+                {
                 if (NetWorkUtil.isNetworkAvailable(getActivity()))
                 {presenter.startLoad(randomUrl);
                 scrollView.fullScroll(View.FOCUS_UP);
-                //要在这里判断是否喜欢
-                favorite.setImageResource(R.drawable.nofavorite);}
+                }
                 else {
                     Toast.makeText(getActivity(),"请检查网络状况",Toast.LENGTH_LONG).show();
-                }
+                }}
                 break;
             case R.id.favorite:
-                article.setFavorited(true);
-                presenter.addFavorite(article);
-                favorite.setImageResource(R.drawable.isfavorite);
+                if (!article.isFavorited())
+                {article.setFavorited(true);
+                presenter.addFavorite(article);}
+                else
+                {
+                    presenter.deleteFavorite(article);
+                    article.setFavorited(false);
+                }
                 break;
         }
     }
@@ -119,17 +135,21 @@ public class ArticalFragment extends Fragment implements ArticalContract.Article
 
     @Override
     public Application getApplication() {
+        if (getActivity()!=null)
         return getActivity().getApplication();
+        else return null;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if (NetWorkUtil.isNetworkAvailable(getActivity())) {
-            presenter.startLoad(url);
-        } else {
-            presenter.getCash();
-        }
+    public void showFavoriteImg() {
+        favorite.setImageResource(R.drawable.isfavorite);
+        article.setFavorited(true);
+    }
+
+    @Override
+    public void showDisFavoriteImg() {
+        favorite.setImageResource(R.drawable.nofavorite);
+        article.setFavorited(false);
     }
 
     @Override

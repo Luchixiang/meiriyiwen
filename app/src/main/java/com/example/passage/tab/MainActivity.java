@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        //绑定监听网络得广播
         intentFilter=new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         workChangeBrodcast=new NetWorkChangeBrodcast();
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        this.hideBottomUIMenu(this);
+        MainActivity.hideBottomUIMenu(this);
     }
 
     public void initView() {

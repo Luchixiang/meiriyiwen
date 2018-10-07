@@ -3,6 +3,7 @@ package com.example.passage.FavoriteAudio;
 import android.app.Application;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.passage.R;
-import com.example.passage.voice.Voice;
+import com.example.passage.model.scrouse.voice.Voice;
 import com.example.passage.voice.VoiceAdapter;
 
 import java.util.ArrayList;
@@ -21,11 +22,13 @@ public class FavoriteAudioFragment extends Fragment implements FavoriteAudioCont
     private FavoriteAudioContract.FavoriteAudioPresenter presenter;
     private RecyclerView recyclerView;
     private VoiceAdapter adapter;
+    private LinearLayoutManager layoutManager;
+    private int lastposition;
+    private int lastOffset;
     private List<Bitmap>bitmaps=new ArrayList<>();
     private List<Voice>cards=new ArrayList<>();
     public static FavoriteAudioFragment newInstance() {
-        FavoriteAudioFragment fragment = new FavoriteAudioFragment();
-        return fragment;
+        return new FavoriteAudioFragment();
     }
 
     @Override
@@ -36,7 +39,11 @@ public class FavoriteAudioFragment extends Fragment implements FavoriteAudioCont
 
     @Override
     public Application gettApplication() {
-        return getActivity().getApplication();
+        if (getActivity()!=null)
+        {
+            return getActivity().getApplication();
+        }
+        return null;
     }
 
     @Override
@@ -55,7 +62,7 @@ public class FavoriteAudioFragment extends Fragment implements FavoriteAudioCont
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_favorite_audio, container, false);
         initView(view);
@@ -63,8 +70,16 @@ public class FavoriteAudioFragment extends Fragment implements FavoriteAudioCont
     }
     public void initView(View view) {
         recyclerView = view.findViewById(R.id.favorite_audio);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                View topView=layoutManager.getChildAt(0);
+                lastOffset=topView.getTop();
+                lastposition=layoutManager.getPosition(topView);
+            }
+        });
         adapter = new VoiceAdapter(getActivity(), cards, recyclerView);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -75,6 +90,7 @@ public class FavoriteAudioFragment extends Fragment implements FavoriteAudioCont
     public void onStart() {
         super.onStart();
         presenter.getFavoriteAudio();
+        layoutManager.scrollToPosition(lastposition);
     }
 
     @Override

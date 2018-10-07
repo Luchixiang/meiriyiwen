@@ -1,11 +1,14 @@
 package com.example.passage.voice;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.arch.persistence.room.Index;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +18,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.passage.R;
+import com.example.passage.model.scrouse.voice.Voice;
+import com.example.passage.tab.MainActivity;
+import com.example.passage.utils.MyBitmapUtils;
 import com.example.passage.voiceplay.VoiceActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
 
 public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> {
     private Context context;
@@ -26,7 +33,6 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
     private RecyclerView recyclerView;
     private List<Bitmap> bitmaps = new ArrayList<>();
 
-    //public View.OnClickListener mLisenstener=new mListener();
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView voiceName;
         private TextView voiceAuthor;
@@ -53,8 +59,8 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
     public VoiceAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final Context context1 = parent.getContext();
         LayoutInflater layoutInflater = LayoutInflater.from(context1);
-        View view = layoutInflater.inflate(R.layout.item_voice, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
+        final View view = layoutInflater.inflate(R.layout.item_voice, parent, false);
+        final ViewHolder viewHolder = new ViewHolder(view);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +77,9 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
                 intent.putExtra("NAME", name);
                 intent.putExtra("AUTHOR", author);
                 intent.putExtra("PLAYER", player);
-                context.startActivity(intent);
+                ActivityOptions activityOptions=ActivityOptions.makeSceneTransitionAnimation((Activity) context,Pair.create((View)viewHolder.img,"animation"));
+                context.startActivity(intent,activityOptions.toBundle());
+
             }
         });
         return viewHolder;
@@ -90,6 +98,7 @@ public class VoiceAdapter extends RecyclerView.Adapter<VoiceAdapter.ViewHolder> 
             holder.voiceAuthor.setText(card.getVoiceAuthor());
             holder.voiceName.setText(card.getVoiceTitle());
             Glide.with(context).load(card.getImgUrl()).apply(new RequestOptions().fitCenter()).into(holder.img);
+            //new MyBitmapUtils().disPlay(holder.img,card.getImgUrl());
         }
     }
 

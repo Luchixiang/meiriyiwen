@@ -2,9 +2,9 @@ package com.example.passage.model;
 
 import android.graphics.Bitmap;
 
-import com.example.passage.model.scrouse.Article;
-import com.example.passage.model.scrouse.ArticleCash;
-import com.example.passage.voice.Voice;
+import com.example.passage.model.scrouse.articlelike.Article;
+import com.example.passage.model.scrouse.articlecash.ArticleCash;
+import com.example.passage.model.scrouse.voice.Voice;
 
 import java.util.List;
 
@@ -16,6 +16,8 @@ public interface ModelContract {
     interface ArticleCallBack extends CallBack {
         void successOfArticle(String s1, String s2, String s3);
         void successOfAddFavorite();
+        void successOfDeleteFavorite();
+        void successOfQueryArticle(List<Article>articles);
     }
 
     interface VoiceCallBack extends CallBack {
@@ -26,6 +28,8 @@ public interface ModelContract {
     interface VoicePlayCallBack extends CallBack {
         void suceessOfVoicePlay(String s);
         void successOfAddVoicae(String s);
+        void successOfDeleteVoice(String s);
+        void successOfQueryVoice(List<Voice>voices);
     }
     interface FavoriteCallBack extends CallBack{
         void successOfGetFavorite(List<Article>articles);

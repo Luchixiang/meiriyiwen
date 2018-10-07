@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 import com.example.passage.model.Model;
 import com.example.passage.model.ModelContract;
+import com.example.passage.model.scrouse.voice.Voice;
 
 import java.util.ArrayList;
 import java.util.List;

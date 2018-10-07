@@ -75,5 +75,7 @@ public class launchActivity extends AppCompatActivity {
                         Toast.makeText(context, "获取网络失败", Toast.LENGTH_LONG).show();
                     }
                 }).show();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

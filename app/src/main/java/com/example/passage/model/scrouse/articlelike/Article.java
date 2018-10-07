@@ -1,4 +1,4 @@
-package com.example.passage.model.scrouse;
+package com.example.passage.model.scrouse.articlelike;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -10,7 +10,7 @@ public class Article {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "articleTitle")
-    private String articleTitle;
+    private String articleTitle="";
     @ColumnInfo(name = "articleAuthor")
     private String articleAuthor;
     @ColumnInfo(name = "articleMain")
@@ -30,7 +30,7 @@ public class Article {
         return articleTitle;
     }
 
-    public void setArticleTitle(String articleTitle) {
+    public void setArticleTitle(@NonNull String articleTitle) {
         this.articleTitle = articleTitle;
     }
 
